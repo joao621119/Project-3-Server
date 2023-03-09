@@ -44,7 +44,13 @@ const petSchema = new Schema(
     location: {
       type: String,
       required: [true, "Location is required."]
-    }
+    },
+    interestedUsers: [
+      {type: Schema.Types.ObjectId, ref: "User"}
+    ],
+    adoptedBy: [
+      {type: Schema.Types.ObjectId, ref: "User"}
+    ]
   },
   {
     timestamps: true,

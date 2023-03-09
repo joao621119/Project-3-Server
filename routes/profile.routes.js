@@ -60,10 +60,17 @@ router.delete("/profile/edit/:id", async (req, res) => {
 
     try {
         const user = await User.findById(id)
-        await Comment.deleteMany({_id: user.reviews})
-        await Pet.deleteMany({_id: user.interestedPets})
-        await Pet.deleteMany({_id: user.petsToAdopt})
-        await Pet.deleteMany({_id: user.adoptedPets})
+        await Comment.deleteMany({author: user._id})
+        await Pet.deleteMany({owner: user._id})
+        const pets = await Pet.find()
+        pets.map((pet) => {
+            if (pet.interestedUsers.includes(user._id)){
+                Pet.findByIdAndUpdate(pet._id, {$pull: {interestedUsers: user._id}})
+            }
+            if(pet.adoptedBy.includes(user._id)) {
+                Pet.findByIdAndUpdate(pet._id, {$pull: {adoptedBy: user._id}})
+            }
+        })
 
         await User.findByIdAndRemove(id)
 
@@ -73,7 +80,14 @@ router.delete("/profile/edit/:id", async (req, res) => {
     }
 })
 
-
+router.get("/profile/interested/id", async (req, res) => {
+    const {id} = req.params
+    try {
+        
+    } catch (error) {
+        res.json(error)
+    }
+})
 
 
 
