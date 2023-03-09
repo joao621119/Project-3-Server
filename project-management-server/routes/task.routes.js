@@ -1,4 +1,4 @@
-const router = require("express").Router();
+/* const router = require("express").Router();
 
 // Import the model
 const Task = require("../models/Task.model");
@@ -23,3 +23,7 @@ router.post("/tasks", async (req, res, next) => {
 });
 
 module.exports = router;
+ */
+const express = require("express");
+const router = express.Router();
+module.exports = router

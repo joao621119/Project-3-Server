@@ -17,18 +17,21 @@ require("./config")(app);
 const { isAuthenticated } = require("./middleware/jwt.middleware");
 
 // 👇 Start handling routes here
+
 const indexRoutes = require("./routes/index.routes");
-app.use("/api", indexRoutes);
+app.use("/", indexRoutes);
 
-// Create the Profile route. Use the /api for back end routes
-const projectRoutes = require("./routes/project.routes");
-app.use("/api", isAuthenticated, projectRoutes);
+const authRoutes = require("./routes/auth.routes")
+app.use("/auth", authRoutes)
 
-const taskRoutes = require("./routes/task.routes");
-app.use("/api", taskRoutes);
+const profileRoutes = require("./routes/profile.routes")
+app.use("/", profileRoutes)
 
-const authRoutes = require("./routes/auth.routes");
-app.use("/auth", authRoutes);
+const petRoutes = require("./routes/pets.routes")
+app.use("/", petRoutes)
+
+const associationRoutes = require("./routes/associations.routes")
+app.use("/", associationRoutes)
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);

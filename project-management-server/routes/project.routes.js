@@ -1,4 +1,4 @@
-const router = require("express").Router();
+/* const router = require("express").Router();
 const mongoose = require("mongoose");
 
 const Project = require("../models/Project.model");
@@ -91,3 +91,7 @@ router.delete("/projects/:id", async (req, res, next) => {
   }
 });
 module.exports = router;
+ */
+const express = require("express");
+const router = express.Router();
+module.exports = router

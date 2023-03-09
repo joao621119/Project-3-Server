@@ -16,9 +16,12 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 // How many rounds should bcrypt run the salt (default - 10 rounds)
 const saltRounds = 10;
 
+
+//Routes:
+
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, description, phone, age, location, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image, gender } = req.body;
 
   // Check if email or password or name are provided as empty strings
   if (email === "" || password === "" || name === "") {
@@ -33,7 +36,8 @@ router.post("/signup", (req, res, next) => {
     return;
   }
 
-  // This regular expression checks password for special characters and minimum length
+  //While developping we leave this commented:
+/*   // This regular expression checks password for special characters and minimum length
   const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   if (!passwordRegex.test(password)) {
     res.status(400).json({
@@ -41,14 +45,14 @@ router.post("/signup", (req, res, next) => {
         "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
     });
     return;
-  }
+  } */
 
   // Check the users collection if a user with the same email already exists
   User.findOne({ email })
     .then((foundUser) => {
       // If the user with the same email already exists, send an error response
       if (foundUser) {
-        res.status(400).json({ message: "User already exists." });
+        res.status(400).json({ message: "This email is already in use." });
         return;
       }
 
@@ -58,15 +62,15 @@ router.post("/signup", (req, res, next) => {
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      return User.create({ email, password: hashedPassword, name });
+      return User.create({ email, password: hashedPassword, name, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image});
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      const { email, name, _id } = createdUser;
+      const { email, name, _id, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image } = createdUser;
 
       // Create a new object that doesn't expose the password
-      const user = { email, name, _id }; // If your have more fills put them here
+      const user = { email, name, _id, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image }; // If your have more fills put them here
 
       // Send a json response containing the user object
       res.status(201).json({ user: user });

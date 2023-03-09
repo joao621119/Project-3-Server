@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-// TODO: Please make sure you edit the User model to whatever makes sense in this case
 const userSchema = new Schema(
   {
     email: {
@@ -18,9 +17,48 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
+    description: {
+      type: String,
+      required: [true, "Description is required."]
+    },
+    location: {
+      type: String
+    },
+    age: {
+      type: Number
+    },
+    userType: {
+      type: String,
+      required: [true, "User type is required."],
+      enum: ["valid", "invalid"]
+    },
+    phone: {
+      type: String
+    },
+    image: {
+      type: String
+    },
+    gender: {
+      type: String
+    },
+    interestedPets: [
+      {type: Schema.Types.ObjectId, ref: "Pet"}
+    ],
+    petsToAdopt: [
+      {type: Schema.Types.ObjectId, ref: "Pet"}
+    ],
+    adoptedPets: [
+      {type: Schema.Types.ObjectId, ref: "Pet"}
+    ],
+    reviews: [
+      {type: Schema.Types.ObjectId, ref: "Comment"}
+    ],
+    likedAssociations: [
+      {type: Schema.Types.ObjectId, ref: "Association"}
+    ]
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
+    // this second object adds extra properties: `createdAt` and `updatedAt` in mongo
     timestamps: true,
   }
 );
