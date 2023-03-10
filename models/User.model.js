@@ -41,10 +41,10 @@ const userSchema = new Schema(
     gender: {
       type: String
     },
-    interestedPets: [
+    interestedInPets: [
       {type: Schema.Types.ObjectId, ref: "Pet"}
     ],
-    petsToAdopt: [
+    petsForAdoption: [
       {type: Schema.Types.ObjectId, ref: "Pet"}
     ],
     adoptedPets: [

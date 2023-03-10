@@ -6,11 +6,6 @@ const petSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-    description: {
-      type: String,
-      trim: true,
-      required: [true, "Description is required."]
-    },
     species: {
       type: String,
       required: [true, "Species is required."]
@@ -38,13 +33,18 @@ const petSchema = new Schema(
       type: String,
       required: [true, "Image is required."]
     },
-    owner: [
-      {type: Schema.Types.ObjectId, ref: "User"}
-    ],
+    description: {
+      type: String,
+      trim: true,
+      required: [true, "Description is required."]
+    },
     location: {
       type: String,
       required: [true, "Location is required."]
     },
+    owner: [
+      {type: Schema.Types.ObjectId, ref: "User"}
+    ],
     interestedUsers: [
       {type: Schema.Types.ObjectId, ref: "User"}
     ],
