@@ -30,6 +30,9 @@ app.use("/", profileRoutes)
 const petRoutes = require("./routes/pets.routes")
 app.use("/", petRoutes)
 
+const commentRoutes = require("./routes/comments.routes")
+app.use("/", commentRoutes)
+
 const associationRoutes = require("./routes/associations.routes")
 app.use("/", associationRoutes)
 
