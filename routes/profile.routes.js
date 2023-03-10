@@ -1,6 +1,6 @@
-const express = require("express");
 const router = require("express").Router();
 const mongoose = require("mongoose");
+const {isAuthenticated} = require('../middleware/jwt.middleware')
 
 //What models do we call?:
 const User = require("../models/User.model");
@@ -11,7 +11,7 @@ const Association = require("../models/Association.model");
 //Users profiles:
 
 //GET | Check own profile:
-router.get("/profile", async (req, res) => {
+router.get("/profile", isAuthenticated, async (req, res) => {
   const currentUser = req.payload._id;
   try {
     const user = await User.findById(currentUser).populate(
@@ -25,10 +25,11 @@ router.get("/profile", async (req, res) => {
 
 //GET | Find OTHER users' profiles
 router.get("/profile/:id", async (req, res) => {
+  
   const { id } = req.params;
 
   try {
-    const user = await User.findById(id).populate("reviews  petsForAdoption");
+    const user = await User.findById(id).populate("reviews").populate("petsForAdoption")
     res.json(user);
   } catch (error) {
     res.json(error);
