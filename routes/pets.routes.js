@@ -8,7 +8,7 @@ const User = require("../models/User.model");
 //GET | Show all pets:
 router.get("/pets", async (req, res) => {
   try {
-    const pets = await Pet.find();
+    const pets = await Pet.find().populate("owner");
     res.json(pets);
   } catch (error) {
     res.json(error);
@@ -132,12 +132,10 @@ router.post("/pets/add", async (req, res) => {
       description === "" ||
       location === ""
     ) {
-      res
-        .status(400)
-        .json({
-          message:
-            "Provide name, species, gender, image, description and location",
-        });
+      res.status(400).json({
+        message:
+          "Provide name, species, gender, image, description and location",
+      });
       return;
     }
     const createdPet = await Pet.create(data);
@@ -147,6 +145,5 @@ router.post("/pets/add", async (req, res) => {
     res.json(error);
   }
 });
-
 
 module.exports = router;
