@@ -8,49 +8,43 @@ const petSchema = new Schema(
     },
     species: {
       type: String,
-      required: [true, "Species is required."]
+      required: [true, "Species is required."],
     },
     breed: {
-      type: String
+      type: String,
     },
     age: {
-      type: Number
+      type: Number,
     },
     weight: {
-      type: Number
+      type: Number,
     },
     birthDate: {
-      type: Date
+      type: Date,
     },
     gender: {
       type: Boolean,
-      required: [true, "Gender is required."]
+      required: [true, "Gender is required."],
     },
     sterilized: {
-      type: Boolean
+      type: Boolean,
     },
     image: {
       type: String,
-      required: [true, "Image is required."]
+      required: [true, "Image is required."],
     },
     description: {
       type: String,
       trim: true,
-      required: [true, "Description is required."]
+      required: [true, "Description is required."],
     },
     location: {
       type: String,
-      required: [true, "Location is required."]
+      required: [true, "Location is required."],
     },
-    owner: [
-      {type: Schema.Types.ObjectId, ref: "User"}
-    ],
-    interestedUsers: [
-      {type: Schema.Types.ObjectId, ref: "User"}
-    ],
-    adoptedBy: [
-      {type: Schema.Types.ObjectId, ref: "User"}
-    ]
+    owner: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    interestedUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    adoptedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,

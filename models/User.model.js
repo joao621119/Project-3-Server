@@ -19,43 +19,33 @@ const userSchema = new Schema(
     },
     description: {
       type: String,
-      required: [true, "Description is required."]
+      required: [true, "Description is required."],
     },
     location: {
-      type: String
+      type: String,
     },
     age: {
-      type: Number
+      type: Number,
     },
     userType: {
       type: String,
       required: [true, "User type is required."],
-      enum: ["valid", "invalid"]
+      enum: ["valid", "invalid"],
     },
     phone: {
-      type: String
+      type: String,
     },
     image: {
-      type: String
+      type: String,
     },
     gender: {
-      type: String
+      type: String,
     },
-    interestedInPets: [
-      {type: Schema.Types.ObjectId, ref: "Pet"}
-    ],
-    petsForAdoption: [
-      {type: Schema.Types.ObjectId, ref: "Pet"}
-    ],
-    adoptedPets: [
-      {type: Schema.Types.ObjectId, ref: "Pet"}
-    ],
-    reviews: [
-      {type: Schema.Types.ObjectId, ref: "Comment"}
-    ],
-    likedAssociations: [
-      {type: Schema.Types.ObjectId, ref: "Association"}
-    ]
+    interestedInPets: [{ type: Schema.Types.ObjectId, ref: "Pet" }],
+    petsForAdoption: [{ type: Schema.Types.ObjectId, ref: "Pet" }],
+    adoptedPets: [{ type: Schema.Types.ObjectId, ref: "Pet" }],
+    reviews: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    likedAssociations: [{ type: Schema.Types.ObjectId, ref: "Association" }],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt` in mongo

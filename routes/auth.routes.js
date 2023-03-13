@@ -16,13 +16,26 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 // How many rounds should bcrypt run the salt (default - 10 rounds)
 const saltRounds = 10;
 
-
 //Routes:
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-
-  const { email, password, name, description, phone, age, location, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image, gender } = req.body;
+  const {
+    email,
+    password,
+    name,
+    description,
+    phone,
+    age,
+    location,
+    userType,
+    interestedPets,
+    petsToAdopt,
+    adoptedPets,
+    reviews,
+    image,
+    gender,
+  } = req.body;
 
   // Check if email or password or name are provided as empty strings:
   if (email === "" || password === "" || name === "") {
@@ -38,7 +51,7 @@ router.post("/signup", (req, res, next) => {
   }
 
   //While developping we leave this commented:
-/*   // This regular expression checks password for special characters and minimum length
+  /*   // This regular expression checks password for special characters and minimum length
   const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   if (!passwordRegex.test(password)) {
     res.status(400).json({
@@ -63,33 +76,90 @@ router.post("/signup", (req, res, next) => {
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      return User.create({ email, password: hashedPassword, name, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image});
+      return User.create({
+        email,
+        password: hashedPassword,
+        name,
+        description,
+        phone,
+        location,
+        age,
+        gender,
+        userType,
+        interestedPets,
+        petsToAdopt,
+        adoptedPets,
+        reviews,
+        image,
+      });
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      const { email, name, _id, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image } = createdUser;
+      const {
+        email,
+        name,
+        _id,
+        description,
+        phone,
+        location,
+        age,
+        gender,
+        userType,
+        interestedPets,
+        petsToAdopt,
+        adoptedPets,
+        reviews,
+        image,
+      } = createdUser;
 
       // Create a new object that doesn't expose the password
-      const user = { email, name, _id, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image }; // If your have more fills put them here
+      const user = {
+        email,
+        name,
+        _id,
+        description,
+        phone,
+        location,
+        age,
+        gender,
+        userType,
+        interestedPets,
+        petsToAdopt,
+        adoptedPets,
+        reviews,
+        image,
+      }; // If your have more fills put them here
 
+      // Create an object that will be set as the token payload
+      const payload = {
+        email,
+        name,
+        _id,
+        description,
+        phone,
+        location,
+        age,
+        gender,
+        userType,
+        interestedPets,
+        petsToAdopt,
+        adoptedPets,
+        reviews,
+        image,
+      };
 
-    // Create an object that will be set as the token payload
-    const payload = { email, name, _id, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image };
-
-    // Create a JSON Web Token and sign it
-    const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-      algorithm: "HS256",
-      expiresIn: "6h",
-    });
-    
+      // Create a JSON Web Token and sign it
+      const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+        algorithm: "HS256",
+        expiresIn: "6h",
+      });
 
       // Send a json response containing the user object
       res.status(201).json({ authToken: authToken });
     })
     .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
 });
-
 
 // POST  /auth/login - Verifies email and password and returns a JWT
 router.post("/login", (req, res, next) => {
@@ -115,19 +185,46 @@ router.post("/login", (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { email, name, _id, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image } = foundUser;
+        const {
+          email,
+          name,
+          _id,
+          description,
+          phone,
+          location,
+          age,
+          gender,
+          userType,
+          interestedPets,
+          petsToAdopt,
+          adoptedPets,
+          reviews,
+          image,
+        } = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { email, name, _id, description, phone, location, age, gender, userType, interestedPets, petsToAdopt, adoptedPets, reviews, image };
+        const payload = {
+          email,
+          name,
+          _id,
+          description,
+          phone,
+          location,
+          age,
+          gender,
+          userType,
+          interestedPets,
+          petsToAdopt,
+          adoptedPets,
+          reviews,
+          image,
+        };
 
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
           algorithm: "HS256",
           expiresIn: "6h",
         });
-        
-
-
 
         // Send the token as the response
         res.status(200).json({ authToken: authToken });
@@ -137,7 +234,6 @@ router.post("/login", (req, res, next) => {
     })
     .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
 });
-
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
 router.get("/verify", isAuthenticated, (req, res, next) => {
