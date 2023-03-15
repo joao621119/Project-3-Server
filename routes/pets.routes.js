@@ -119,7 +119,7 @@ router.delete("/pets/edit/:id", async (req, res) => {
 
     //Remove the pet:
     await Pet.findByIdAndRemove(id);
-    res.json({ messag: `The Pet with the id: ${id} has been deleted.` });
+    res.json({ message: `The Pet with the id: ${id} has been deleted.` });
   } catch (error) {
     res.json(error);
   }
@@ -167,10 +167,86 @@ router.post("/pets/add", isAuthenticated, async (req, res) => {
       { new: true }
     );
     console.log(myUpdatedUser);
+
+    const myUpdatedPet = await Pet.findByIdAndUpdate(
+      createdPet._id,
+      {
+        $push: { owner: myUpdatedUser._id },
+      },
+      { new: true }
+    );
+    console.log(myUpdatedPet);
+
     res.status(201).json(myUpdatedUser);
   } catch (error) {
     res.json(error);
   }
+
+  router.put("/pets/like/:id", isAuthenticated, async (req, res) => {
+    const petId = req.params.id;
+    const userId = req.user._id;
+
+    try {
+      // Find the pet by ID
+      const pet = await Pet.findById(petId);
+
+      if (!pet) {
+        return res.status(404).json({ message: "Pet not found" });
+      }
+
+      // Find the user by ID and update their interestedIn array
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { interestedIn: petId } },
+        { new: true }
+      );
+
+      // Update the interestedUsers array of the pet with the user who liked the pet
+      await Pet.findByIdAndUpdate(
+        petId,
+        { $addToSet: { interestedUsers: userId } },
+        { new: true }
+      );
+
+      return res.status(200).json({ message: "Pet liked successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  router.put("/pets/unlike/:id", isAuthenticated, async (req, res) => {
+    const petId = req.params.id;
+    const userId = req.user._id;
+
+    try {
+      // Find the pet by ID
+      const pet = await Pet.findById(petId);
+
+      if (!pet) {
+        return res.status(404).json({ message: "Pet not found" });
+      }
+
+      // Find the user by ID and update their interestedIn array
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $pull: { interestedIn: petId } },
+        { new: true }
+      );
+
+      // Update the interestedUsers array of the pet with the user who liked the pet
+      await Pet.findByIdAndUpdate(
+        petId,
+        { $pull: { interestedUsers: userId } },
+        { new: true }
+      );
+
+      return res.status(200).json({ message: "Pet unliked successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
 });
 
 module.exports = router;
