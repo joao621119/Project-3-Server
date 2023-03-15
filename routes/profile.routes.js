@@ -8,7 +8,8 @@ const Comment = require("../models/Comment.model");
 const Pet = require("../models/Pet.model");
 const Association = require("../models/Association.model");
 
-//Users profiles:
+
+//Users profiles routes:
 
 //GET | Check own profile:
 router.get("/profile", isAuthenticated, async (req, res) => {
@@ -23,6 +24,7 @@ router.get("/profile", isAuthenticated, async (req, res) => {
   }
 });
 
+
 //GET | Find OTHER users' profiles
 router.get("/profile/:id", async (req, res) => {
   
@@ -35,6 +37,7 @@ router.get("/profile/:id", async (req, res) => {
     res.json(error);
   }
 });
+
 
 //PUT | Edit user's OWN profile:
 router.put("/profile/edit/:id", async (req, res) => {
@@ -81,6 +84,7 @@ router.put("/profile/edit/:id", async (req, res) => {
     res.json(error);
   }
 });
+
 
 //DELETE | Delete user's OWN profile (and their pets + comments + liked associations):
 router.delete("/profile/edit/:id", async (req, res) => {
@@ -129,6 +133,7 @@ router.delete("/profile/edit/:id", async (req, res) => {
   }
 });
 
+
 //GET | View user's list of pets they're interested in:
 router.get("/profile/interested/:id", async (req, res) => {
   const { id } = req.params;
@@ -140,6 +145,7 @@ router.get("/profile/interested/:id", async (req, res) => {
     res.json(error);
   }
 });
+
 
 //DELETE | Delete a pet from user's interested list:
 router.delete("/profile/interested/:id", async (req, res) => {
@@ -167,6 +173,7 @@ router.delete("/profile/interested/:id", async (req, res) => {
   }
 });
 
+
 //GET | View user's adopted pets list:
 router.get("/profile/adopted/:id", async (req, res) => {
   const { id } = req.params;
@@ -178,6 +185,7 @@ router.get("/profile/adopted/:id", async (req, res) => {
     res.json(error);
   }
 });
+
 
 //DELETE | Delete a pet from user's adopted pets list:
 router.delete("/profile/adopted/:id", async (req, res) => {
@@ -204,6 +212,7 @@ router.delete("/profile/adopted/:id", async (req, res) => {
   }
 });
 
+
 //GET | View user's list of pets avaliable for adoption:
 router.get("/profile/foradapotion/:id", async (req, res) => {
   const { id } = req.params;
@@ -215,6 +224,7 @@ router.get("/profile/foradapotion/:id", async (req, res) => {
     res.json(error);
   }
 });
+
 
 //DELETE | Delete pets from  user's list of pets avaliable for adoption:
 router.delete("/profile/foradoption/:id", async (req, res) => {

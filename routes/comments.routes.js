@@ -1,4 +1,4 @@
-const express = require("express");
+/* const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
@@ -72,4 +72,4 @@ router.delete("/comments/edit/:id", async (req, res) => {
 });
 
 
-module.exports = router;
+module.exports = router; */

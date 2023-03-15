@@ -8,7 +8,9 @@ const User = require("../models/User.model");
 const fileUploader = require("../config/cloudinary.config");
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
-// POST "/api/upload" => Route that receives the image, sends it to Cloudinary via the fileUploader and returns the image URL
+//ROUTES:
+
+// POST |  "/api/upload" => Route that receives the image, sends it to Cloudinary via the fileUploader and returns the image URL
 router.post("/upload", fileUploader.single("image"), (req, res, next) => {
   // console.log("file is: ", req.file)
 
@@ -23,7 +25,7 @@ router.post("/upload", fileUploader.single("image"), (req, res, next) => {
   res.json({ fileUrl: req.file.path });
 });
 
-//GET | Show all pets:
+//GET | Display ALL pets:
 router.get("/pets", async (req, res) => {
   try {
     const pets = await Pet.find().populate("owner");
@@ -33,7 +35,7 @@ router.get("/pets", async (req, res) => {
   }
 });
 
-//GET | Display a single pet:
+//GET | Display a SINGLE pet:
 router.get("/pets/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -99,6 +101,7 @@ router.delete("/pets/edit/:id", async (req, res) => {
     res.json("The provided id is not valid.");
 
   try {
+    console.log(id);
     const users = await User.find();
 
     //Remove pet's id from user's interestedInPets, petsForAdoption and adoptedPets
@@ -181,72 +184,76 @@ router.post("/pets/add", isAuthenticated, async (req, res) => {
   } catch (error) {
     res.json(error);
   }
-
-  router.put("/pets/like/:id", isAuthenticated, async (req, res) => {
-    const petId = req.params.id;
-    const userId = req.user._id;
-
-    try {
-      // Find the pet by ID
-      const pet = await Pet.findById(petId);
-
-      if (!pet) {
-        return res.status(404).json({ message: "Pet not found" });
-      }
-
-      // Find the user by ID and update their interestedIn array
-      const user = await User.findByIdAndUpdate(
-        userId,
-        { $addToSet: { interestedIn: petId } },
-        { new: true }
-      );
-
-      // Update the interestedUsers array of the pet with the user who liked the pet
-      await Pet.findByIdAndUpdate(
-        petId,
-        { $addToSet: { interestedUsers: userId } },
-        { new: true }
-      );
-
-      return res.status(200).json({ message: "Pet liked successfully" });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: "Internal server error" });
+});
+//PUT | Like a pet
+router.put("/pets/like/:id", isAuthenticated, async (req, res) => {
+  const { id } = req.params;
+  const userId = req.payload._id;
+  try {
+    console.log(id);
+    console.log(userId);
+    // Find the pet by ID
+    const pet = await Pet.findById(id);
+    console.log(pet);
+    if (!pet) {
+      return res.status(404).json({ message: "Pet not found" });
     }
-  });
 
-  router.put("/pets/unlike/:id", isAuthenticated, async (req, res) => {
-    const petId = req.params.id;
-    const userId = req.user._id;
+    // Find the user by ID and update their interestedInPets array
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { interestedInPets: id } },
+      { new: true }
+    );
+    console.log(user);
+    // Update the interestedUsers array of the pet with the user who liked the pet
+    const updatedPet = await Pet.findByIdAndUpdate(
+      id,
+      { $addToSet: { interestedUsers: userId } },
+      { new: true }
+    );
+    console.log(updatedPet);
+    return res
+      .status(200)
+      .json({ message: "Pet liked successfully", updatedPet });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
 
-    try {
-      // Find the pet by ID
-      const pet = await Pet.findById(petId);
+//PUT | UNlike a pe
+router.put("/pets/unlike/:id", isAuthenticated, async (req, res) => {
+  const petId = req.params.id;
+  const userId = req.payload._id;
 
-      if (!pet) {
-        return res.status(404).json({ message: "Pet not found" });
-      }
+  try {
+    // Find the pet by ID
+    const pet = await Pet.findById(petId);
 
-      // Find the user by ID and update their interestedIn array
-      const user = await User.findByIdAndUpdate(
-        userId,
-        { $pull: { interestedIn: petId } },
-        { new: true }
-      );
-
-      // Update the interestedUsers array of the pet with the user who liked the pet
-      await Pet.findByIdAndUpdate(
-        petId,
-        { $pull: { interestedUsers: userId } },
-        { new: true }
-      );
-
-      return res.status(200).json({ message: "Pet unliked successfully" });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: "Internal server error" });
+    if (!pet) {
+      return res.status(404).json({ message: "Pet not found" });
     }
-  });
+
+    // Find the user by ID and update their interestedInPets array
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { interestedInPets: petId } },
+      { new: true }
+    );
+
+    // Update the interestedUsers array of the pet with the user who liked the pet
+    await Pet.findByIdAndUpdate(
+      petId,
+      { $pull: { interestedUsers: userId } },
+      { new: true }
+    );
+
+    return res.status(200).json({ message: "Pet unliked successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 module.exports = router;
