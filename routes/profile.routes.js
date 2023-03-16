@@ -31,7 +31,7 @@ router.get("/profile/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const user = await User.findById(id).populate("reviews").populate("petsForAdoption")
+    const user = await User.findById(id).populate("interestedInPets").populate("petsForAdoption")
     res.json(user);
   } catch (error) {
     res.json(error);
